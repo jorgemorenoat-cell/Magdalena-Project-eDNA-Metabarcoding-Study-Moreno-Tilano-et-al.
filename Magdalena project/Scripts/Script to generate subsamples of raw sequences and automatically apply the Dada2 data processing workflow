@@ -1,0 +1,45 @@
+# Bash script for generating rarefaction curves 
+# This code must be run in the folder where the original sequences are located
+
+# 1. Calculate the corresponding percentages for the subsampling 
+seq 0.1 0.1 1 | sed 's/,/./' > sets 
+
+# 2. Extract the file names
+ls *.fastq > fq.names
+
+# 3. Load previous items
+SETS=$(cat sets)
+NAMES=$(cat fq.names)
+
+# 4. Perform subsampling by creating folders for each percentage
+for s in $SETS; do
+    DIR="sub_$s"
+    mkdir -p "$DIR"
+
+    echo "Procesando submuestreo $s en carpeta $DIR..."
+
+    for f in $NAMES; do
+        OUT="$DIR/$f.gz"
+
+        if [ "$s" = "1.0" ]; then
+            echo "   Copiando archivo completo $f -> $OUT"
+            gzip -c "$f" > "$OUT"
+        else
+            echo "   Submuestreando $f -> $OUT"
+            seqtk sample "$f" "$s" | gzip > "$OUT"
+        fi
+    done
+done
+
+# 5. Run an automated script for each subsampling folder
+mkdir -p outputs/Taxa_final
+echo "Subset,Num_Taxa" > outputs/Taxa_final/Taxa_counts.csv
+
+for dir in sub_*; do    Rscript ../../../../../dada2_pipeline/scripts/Dada2_automatico\ _bash_taxones.R "$dir"; done  
+#Changing the path depends on the folder where the code is running to determine the script's location  
+#You can also modify the code or change the database path to vert
+
+
+
+
+
