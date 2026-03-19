@@ -64,16 +64,40 @@ This folder contains all scripts required for bioinformatic processing and downs
 * `Moreno-Tilano et al.R`: R script containing all statistical analyses and figure generation used in the manuscript.
 
 ---
+### 4. Raw sequencing data (Zenodo)
 
-### 4. Teleo Raw data/
+Raw sequencing data are not stored in this repository due to file size constraints and are available in Zenodo:
 
-### 5. Vert01 Raw data/
+DOI: 10.22541/au.173262274.49229664/v1
 
-These folders contain raw sequencing data (compressed FASTQ files), including forward and reverse reads prior to demultiplexing.
+These files correspond to the original Illumina output (paired-end FASTQ files) prior to any demultiplexing or processing.
 
+#### Sequencing runs and primer correspondence
+
+The dataset includes four sequencing runs identified by the suffix “AX” in the file names:
+
+- **A1 and A5** → Vert01 primer (general vertebrates)
+- **A2 and A7** → Teleo primer (fish-specific)
+
+File naming follows the Illumina convention:
+
+- `*_R1.fastq.gz`: forward reads  
+- `*_R2.fastq.gz`: reverse reads  
+
+Example:
+- `VL324___MB0423A2___R1.fastq.gz`
+- `VL324___MB0423A2___R2.fastq.gz`
+
+#### Relationship with this repository
+
+- Raw FASTQ files (Zenodo) → input for demultiplexing and trimming (`Scripts/trimming.sh`)
+- Sample identities and indices → `config/` folder
+- Processed outputs and taxonomic tables → `outputs/` folder
+
+Users must download the raw data from Zenodo and place them in the expected directory structure before running the pipeline.
 ---
 
-### 6. utils/
+### 5. utils/
 
 This folder contains supporting datasets and metadata:
 
