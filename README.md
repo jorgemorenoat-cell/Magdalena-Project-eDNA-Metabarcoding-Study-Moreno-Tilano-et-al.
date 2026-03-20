@@ -70,9 +70,11 @@ Raw sequencing data are not stored in this repository due to file size constrain
 
 DOI: 10.22541/au.173262274.49229664/v1
 
-These files correspond to the original Illumina output (paired-end FASTQ files) prior to any demultiplexing or processing.
+Two types of raw data are provided:
 
-#### Sequencing runs and primer correspondence
+#### 4.1. Original Illumina output (non-demultiplexed)
+
+These files correspond to the direct output from the sequencing platform (paired-end FASTQ files) prior to demultiplexing and primer trimming.
 
 The dataset includes four sequencing runs identified by the suffix “AX” in the file names:
 
@@ -88,11 +90,28 @@ Example:
 - `VL324___MB0423A2___R1.fastq.gz`
 - `VL324___MB0423A2___R2.fastq.gz`
 
+These files require demultiplexing and primer trimming before downstream analyses.
+
+#### 4.2. Demultiplexed and primer-trimmed data
+
+Additionally, we provide preprocessed raw data organized into:
+
+- `Teleo Raw data/`
+- `Vert01 Raw data/`
+
+These compressed folders contain reads already:
+
+- demultiplexed by sample  
+- trimmed for primer sequences  
+
+These files can be used directly as input for DADA2 and downstream analyses without running the trimming pipeline.
+
 #### Relationship with this repository
 
-- Raw FASTQ files (Zenodo) → input for demultiplexing and trimming (`Scripts/trimming.sh`)
+- Original Illumina data → require processing using `Scripts/trimming.sh`
+- Demultiplexed data → can be used directly for downstream analyses
 - Sample identities and indices → `config/` folder
-- Processed outputs and taxonomic tables → `outputs/` folder
+- Processed outputs → `outputs/` folder
 
 Users must download the raw data from Zenodo and place them in the expected directory structure before running the pipeline.
 ---
@@ -109,23 +128,46 @@ This folder contains supporting datasets and metadata:
   * Sheet 2: Mapping between capsule codes and sample names used in the manuscript
 
 ---
-
 ## Reproducibility Workflow
 
-To reproduce the analyses:
+Two alternative workflows are available depending on the starting point of the analysis:
 
-1. Start from raw data (`Teleo Raw data/`, `Vert01 Raw data/`)
-2. Run trimming and demultiplexing:
+### Option 1: Full pipeline (from original raw data)
+
+1. Download original Illumina raw data from Zenodo  
+2. Run demultiplexing and primer trimming:
 
    * `trimming.sh` (uses configuration files in `config/`)
+
 3. Process sequences using DADA2:
 
-   * The codes are present at the beginning of the main script.
-4. Generate taxonomic assignments and ASV tables
-5. Use curated datasets from `outputs/` for ecological analyses
+   * Code available at the beginning of `Moreno-Tilano et al.R`
+
+4. Generate ASV tables and taxonomic assignments  
+5. Use curated datasets from `outputs/` for ecological analyses  
 6. Run statistical analyses and figure generation:
 
    * `Moreno-Tilano et al.R`
+
+---
+
+### Option 2: Reduced pipeline (from demultiplexed data)
+
+1. Download preprocessed data (`Teleo Raw data/`, `Vert01 Raw data/`) from Zenodo  
+2. Skip demultiplexing and primer trimming  
+3. Process sequences directly using DADA2:
+
+   * Code available at the beginning of `Moreno-Tilano et al.R`
+
+4. Generate ASV tables and taxonomic assignments  
+5. Use curated datasets from `outputs/` for ecological analyses  
+6. Run statistical analyses and figure generation  
+
+---
+
+### Important note
+
+The full pipeline (Option 1) represents the complete and fully reproducible workflow starting from raw sequencing output. The reduced pipeline (Option 2) is provided for convenience and faster reproducibility of downstream analyses.
 
 ---
 
